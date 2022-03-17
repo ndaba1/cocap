@@ -12,9 +12,17 @@ fn main() {
 
     program
         .add_cmd()
-        .command("stats [app-name]")
+        .command("stats")
         .alias("status")
         .describe("Print out statistics about your latest commits")
+        .option(
+            "-c --count <count-size>",
+            "Specify how far the stats should show",
+        )
+        .option(
+            "-d --dir <dir-name>",
+            "Print out stats for a specific directory",
+        )
         .action(|vals, opts| {
             dbg!(vals);
             dbg!(opts);
