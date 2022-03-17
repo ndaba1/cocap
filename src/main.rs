@@ -1,10 +1,13 @@
-use cmder::Program;
+use cmder::{Designation, Event, Formatter, Program};
+use figlet_rs::FIGfont;
 
 fn main() {
     let mut program = Program::new();
 
     program
         .version("0.1.0")
+        .bin_name("cocap")
+        .author("Victor Ndaba <vndabam@gmail.com>")
         .description("A wrapper around git to increase developer productivity");
 
     program
@@ -39,6 +42,30 @@ fn main() {
             dbg!(opts);
         })
         .build(&mut program);
+
+    program
+        .add_cmd()
+        .command("ui")
+        .alias("serve")
+        .describe("Start the UI server on a default or provided port")
+        .option("-p --port", "Specify a custom port to start the server on")
+        .action(|vals, opts| {
+            dbg!(vals);
+            dbg!(opts);
+        })
+        .build(&mut program);
+
+    program.on(Event::OutputVersion, |p, v| {
+        let standard_font = FIGfont::standand().unwrap();
+        let figure = standard_font.convert("cocap").unwrap();
+
+        let mut fmtr = Formatter::default();
+        fmtr.add(Designation::Keyword, &figure.to_string());
+        fmtr.add(Designation::Headline, &format!("cocap v{}\n", &v));
+        fmtr.add(Designation::Description, &format!("{}\n", p.about));
+
+        fmtr.print();
+    });
 
     program.parse();
 }
