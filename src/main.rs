@@ -34,6 +34,10 @@ fn main() {
         .command("add <dir-name>")
         .alias("track")
         .describe("Start tracking a new directory with git and cocap")
+        .option(
+            "-r --root",
+            "Track all git initialized directories in a given root dir",
+        )
         .action(|vals, opts| {
             dbg!(vals);
             dbg!(opts);
@@ -61,6 +65,24 @@ fn main() {
             dbg!(vals);
             dbg!(opts);
         })
+        .build(&mut program);
+
+    program
+        .add_cmd()
+        .command("push [dir-name]")
+        .alias("p")
+        .describe("Push changes to their respective remote repositories")
+        .option("-a --all", "Push all changes in all tracked directories")
+        .action(|_v, _o| {})
+        .build(&mut program);
+
+    program
+        .add_cmd()
+        .command("config")
+        .alias("cfg")
+        .describe("Set the configurations for cocap")
+        .option("-g --global", "Configure global cocap options")
+        .action(|_v, _o| {})
         .build(&mut program);
 
     program.on(Event::OutputVersion, |p, v| {
