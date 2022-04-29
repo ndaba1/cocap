@@ -1,3 +1,5 @@
-use clap::ArgMatches;
+#![allow(unused)]
 
-pub fn stats(_cfg: &ArgMatches) {}
+use std::collections::HashMap;
+
+pub fn stats(vals: HashMap<String, String>, _opts: HashMap<String, String>) {}
