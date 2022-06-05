@@ -27,7 +27,7 @@ impl CocapEntry {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EntryDB {
-    entries: Vec<CocapEntry>,
+    pub entries: Vec<CocapEntry>,
 }
 
 fn get_entries_path() -> CocapResult<PathBuf> {
@@ -71,4 +71,15 @@ pub fn find_entry(val: String) -> Option<CocapEntry> {
     }
 
     None
+}
+
+pub fn clear_entries() -> CocapResult<()> {
+    let path = get_entries_path()?;
+    let value = serde_json::json!({
+        "entries": []
+    });
+
+    let contents = serde_json::to_string_pretty(&value)?;
+    fs::write(path, contents.as_bytes())?;
+    Ok(())
 }

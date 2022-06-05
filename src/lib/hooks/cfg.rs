@@ -1,7 +1,7 @@
 use std::{
     fs::{self, File},
     io::Write,
-    path::Path,
+    path::{Path, PathBuf},
 };
 
 use serde::{Deserialize, Serialize};
@@ -36,6 +36,13 @@ impl Default for CocapConfig {
  * }
  */
 
+fn get_cfg_path() -> CocapResult<PathBuf> {
+    // assert cfg files exist
+    get_config()?;
+
+    Ok(get_home_dir().join(".cocap").join("config.json"))
+}
+
 pub fn get_config() -> CocapResult<CocapConfig> {
     // TODO: Check for local configs
     let home = get_home_dir();
@@ -69,4 +76,13 @@ pub fn get_config() -> CocapResult<CocapConfig> {
 
         Ok(default_cfg)
     }
+}
+
+pub fn reset_config() -> CocapResult<()> {
+    let cfg = CocapConfig::default();
+    let path = get_cfg_path()?;
+    let contents = serde_json::to_string_pretty(&cfg)?;
+
+    fs::write(path, contents.as_bytes())?;
+    Ok(())
 }
